@@ -80,8 +80,8 @@ async function fetchAndStream(request) {
       // Hmmm, front page?
       return createHTMLResponse(501, "Not Implemented");
     }
-    // One slash
-    tag = "DEFAULT_TAG";
+    // One slash, use default tag
+    tag = DEFAULT_TAG;
     filename = pathParts[1];
   } else if (pathParts.length === 3) {
     // Two slashes
