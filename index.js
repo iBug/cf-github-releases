@@ -1,10 +1,21 @@
-const DOMAIN = undefined; // Your domain, e.g. my.example.com
+// Your domain, e.g. my.example.com
+const DOMAIN = undefined;
+
+// The repository in which you're providing download files
 const REPOSITORY = "octocat/hello-world";
+
+// The default tag if not specified
 const DEFAULT_TAG = "default";
-const SITE_NAME = "My Worker Download Center";
+
+// Give your site a lovely name
+const SITE_NAME = "My Daffodil bucket";
+
+// Any extra <head> content you want. CSS, favicons are all welcome!
 const HEAD = `<style>html,body{font-family:-apple-system,BlinkMacSystemFont,roboto,segoe ui,helvetica neue,lucida grande,microsoft yahei,Arial,sans-serif;}
-pre,code{font-family:Roboyo Mono,Consolas,monospace;}</style>
-<!-- Place any <head> elements here -->`;
+pre,code{font-family:Roboyo Mono,Consolas,monospace;}
+th{text-align:initial;}</style>`;
+
+/* End of configuration */
 
 addEventListener("fetch", event => {
   return event.respondWith(fetchAndStream(event.request));
@@ -28,6 +39,10 @@ function humanFileSize(bytes, si=false, dp=1) {
   return bytes.toFixed(dp) + ' ' + units[u];
 }
 
+function makeHTML(title, body) {
+  return `<!DOCTYPE html><html><head><title>${title} - ${SITE_NAME}</title>${HEAD}</head><body>${body}</body></html>`;
+}
+
 function makeFileListHTML(data) {
   let s = "", tag = data["tag_name"];
   for (let item of data["assets"]) {
@@ -38,35 +53,17 @@ function makeFileListHTML(data) {
     let updated = item["updated_at"];
     s += `<tr><td><a href="/${tag}/${name}">${name}</a></td><td><span title="${sizeActual}">${sizeHuman}</span></td><td>${updated}</td></tr>`;
   }
-  let html = `<!DOCTYPE html>
-<html>
-<head><title>${tag} - ${SITE_NAME}</title>${HEAD}</head>
-<body>
-<h1>Files in <code>${tag}</code></h1>
+  return makeHTML(tag, `<h1>Files in <code>${tag}</code></h1>
 <table>
 <thead><tr><th>File</th><th>Size</th><th>Updated</th></tr></thead>
 <tbody>${s}</tbody>
-</table>
-</body>
-</html>`;
-  return html;
+</table>`);
 }
 
 function createHTMLResponse(code, text) {
   text = `${code} ${text}`;
-  return new Response(`<!DOCTYPE html>
-<html>
-<head>
-<title>${text} - ${SITE_NAME}</title>
-${HEAD}
-</head>
-<body>
-<center><h1>${text}</h1></center>
-<hr>
-<center>${SITE_NAME}</center>
-</body>
-</html>
-`, {status: code, headers: {"Content-Type": "text/html"}});
+  body = `<center><h1>${text}</h1></center><hr><center>${SITE_NAME}</center></body></html>`;
+  return new Response(makeHTML(text, body), {status: code, headers: {"Content-Type": "text/html"}});
 }
 
 async function fetchAndStream(request) {
@@ -75,7 +72,7 @@ async function fetchAndStream(request) {
     // Pass through
     return fetch(request);
   }
-  
+
   let newUrl, tag, filename;
   let pathParts = url.pathname.split("/");
   if (pathParts.length === 2) {
@@ -91,7 +88,7 @@ async function fetchAndStream(request) {
     tag = pathParts[1];
     if (pathParts[2] === "") {
       //return createHTMLResponse(501, "Not Implemented");
-      
+
       // Fetch GitHub API and list files
       let apiUrl = `https://api.github.com/repos/${REPOSITORY}/releases/tags/${tag}`;
       console.log(apiUrl);
