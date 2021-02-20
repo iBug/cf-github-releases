@@ -1,4 +1,4 @@
-import { SITE_NAME, HEAD } from "./config";
+import { SITE_NAME, HEAD, DEFAULT_TAG } from "./config";
 
 // Credits: https://stackoverflow.com/a/14919494/5958455
 function humanFileSize(bytes, si = false, dp = 1) {
@@ -20,7 +20,11 @@ function humanFileSize(bytes, si = false, dp = 1) {
 
 function getItemIcon(basename) {
   let icon;
-  if (/\.(jpe?g|png|bmp|tiff?|gif|webp|tga|cr2|nef|ico)$/i.test(basename)) {
+  if (basename === "$folder") {
+    icon = "folder-open";
+  } else if (basename === "$folderDefault") {
+    icon = "box-open";
+  } else if (/\.(jpe?g|png|bmp|tiff?|gif|webp|tga|cr2|nef|ico)$/i.test(basename)) {
     icon = "file-image";
   } else if (/\.(pub|txt|ini|cfg)$/i.test(basename)) {
     icon = "file-alt";
@@ -49,12 +53,19 @@ function getItemIcon(basename) {
   }
 
   return `<i class="fas fa-fw fa-${icon}" aria-hidden="true"></i>`;
-};
+}
 
 export function listFilesHTML(data) {
-  let tbody = "",
+  let description = "",
+    tbody = "",
     tag = data["tag_name"],
     displayName = data["name"];
+
+  if (data["body"]) {
+    // render Markdown?
+    description = `<p class="lead">${data["body"]}</p>`;
+  }
+
   for (let item of data["assets"]) {
     let name = item["name"];
     let size = item["size"];
@@ -67,13 +78,54 @@ export function listFilesHTML(data) {
     <td>${updated}</td>
     </tr>`;
   }
+
   return makeHTML(
     tag,
     `<div class="container">
       <h1 class="py-5 text-center">${displayName} - ${SITE_NAME}</h1>
+      ${description}
       <div class="row"><div class="col col-md-12">
         <table class="table table-hover border bg-white">
           <thead class="thead-light"><tr><th>File</th><th>Size</th><th>Updated</th></tr></thead>
+          <tbody>${tbody}</tbody>
+        </table>
+      </div></div>
+    </div>`
+  );
+}
+
+export function listReleasesHTML(data) {
+  let tbody = "";
+  for (let item of data) {
+    let tag = item["tag_name"],
+      name = item["name"],
+      publishTime = new Date(item["published_at"]).toUTCString();
+    if (tag === DEFAULT_TAG) {
+      // The default tag goes in the first place
+      let iconHTML = getItemIcon("$folderDefault");
+      tbody =
+        `<tr>
+      <td><a href="/${tag}/">${iconHTML} ${tag}</a></td>
+      <td>${name}</td>
+      <td>${publishTime}</td>
+      </tr>` + tbody;
+    } else {
+      let iconHTML = getItemIcon("$folder");
+      tbody += `<tr>
+      <td><a href="/${tag}/">${iconHTML} ${tag}</a></td>
+      <td>${name}</td>
+      <td>${publishTime}</td>
+      </tr>`;
+    }
+  }
+
+  return makeHTML(
+    "Home",
+    `<div class="container">
+      <h1 class="py-5 text-center">${SITE_NAME}</h1>
+      <div class="row"><div class="col col-md-12">
+        <table class="table table-hover border bg-white">
+          <thead class="thead-light"><tr><th>Release</th><th>Name</th><th>Created</th></tr></thead>
           <tbody>${tbody}</tbody>
         </table>
       </div></div>

@@ -1,9 +1,10 @@
 import { DOMAIN, REPOSITORY, DEFAULT_TAG, SITE_NAME } from "./config";
-import { listFilesHTML, createHTMLResponse } from "./ui";
+import { listFilesHTML, listReleasesHTML, createHTMLResponse } from "./ui";
 
-addEventListener("fetch", (event) => event.respondWith(fetchAndStream(event.request)));
+addEventListener("fetch", (event) => event.respondWith(fetchEventHandler(event)));
 
-async function fetchAndStream(request) {
+async function fetchEventHandler(event) {
+  const request = event.request;
   let url = new URL(request.url);
   if (typeof DOMAIN !== "undefined" && url.hostname !== DOMAIN) {
     // Pass through
@@ -14,18 +15,26 @@ async function fetchAndStream(request) {
   let pathParts = url.pathname.split("/");
   if (pathParts.length === 2) {
     if (pathParts[1] === "") {
-      // Hmmm, front page?
-      return createHTMLResponse(501, "Not Implemented");
+      // Front page - list available releases
+      let apiUrl = `https://api.github.com/repos/${REPOSITORY}/releases`;
+      console.log(apiUrl);
+      let response = await fetch(apiUrl, { headers: { "User-Agent": `Repository ${REPOSITORY}` } });
+      if (response.status !== 200) {
+        console.log(response.status);
+        console.log(response.body.read());
+        return createHTMLResponse(503, "Unavailable");
+      }
+      let data = await response.json();
+      return new Response(listReleasesHTML(data), { status: 200, headers: { "Content-Type": "text/html" } });
     }
-    // One slash
+
+    // One slash - load file from DEFAULT_TAG
     tag = DEFAULT_TAG;
     filename = pathParts[1];
   } else if (pathParts.length === 3) {
     // Two slashes
     tag = pathParts[1];
     if (pathParts[2] === "") {
-      //return createHTMLResponse(501, "Not Implemented");
-
       // Fetch GitHub API and list files
       let apiUrl = `https://api.github.com/repos/${REPOSITORY}/releases/tags/${tag}`;
       console.log(apiUrl);
