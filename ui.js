@@ -30,7 +30,7 @@ function getItemIcon(basename) {
     icon = "file-alt";
   } else if (/\.(mp4|mkv|wmv|flv|hls|ogv|avi)$/i.test(basename)) {
     icon = "file-video";
-  } else if (/\.(mp3|wma|flac|ogg|aac|m4a)$/i.test(basename)) {
+  } else if (/\.(mp3|wav|wma|flac|ogg|aac|m4a)$/i.test(basename)) {
     icon = "file-audio";
   } else if (/\.(zip|tgz|gz|tar|7z|rar|xz)$/i.test(basename)) {
     icon = "file-archive";
