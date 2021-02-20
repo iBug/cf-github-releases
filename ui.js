@@ -26,13 +26,13 @@ function getItemIcon(basename) {
     icon = "box-open";
   } else if (/\.(jpe?g|png|bmp|tiff?|gif|webp|tga|cr2|nef|ico)$/i.test(basename)) {
     icon = "file-image";
-  } else if (/\.(pub|txt|ini|cfg)$/i.test(basename)) {
+  } else if (/\.(md|markdown|txt|ini|conf|cfg|pub)$/i.test(basename)) {
     icon = "file-alt";
   } else if (/\.(mp4|mkv|wmv|flv|hls|ogv|avi)$/i.test(basename)) {
     icon = "file-video";
   } else if (/\.(mp3|wav|wma|flac|ogg|aac|m4a)$/i.test(basename)) {
     icon = "file-audio";
-  } else if (/\.(zip|tgz|gz|tar|7z|rar|xz)$/i.test(basename)) {
+  } else if (/\.(zip|tgz|gz|tar|7z|rar|xz|bz2)$/i.test(basename)) {
     icon = "file-archive";
   } else if (/\.(docx?)$/i.test(basename)) {
     icon = "file-word";
@@ -42,7 +42,7 @@ function getItemIcon(basename) {
     icon = "file-powerpoint";
   } else if (/\.(pdf)$/i.test(basename)) {
     icon = "file-pdf";
-  } else if (/\.([ch](?:pp)?|cs|css|js|json|java|vb[as]?|py)$/i.test(basename)) {
+  } else if (/\.([ch](?:pp)?|html|css|js|json)$/i.test(basename)) {
     icon = "file-code";
   } else if (/\.(csv)$/i.test(basename)) {
     icon = "file-csv";
@@ -52,8 +52,10 @@ function getItemIcon(basename) {
     icon = "file";
   }
 
-  return `<i class="fas fa-lg fa-fw fa-${icon}" aria-hidden="true"></i>`;
+  return makeIconHTML(`fas fa-lg fa-fw fa-${icon}`);
 }
+
+const makeIconHTML = (classes) => `<i class="${classes}" aria-hidden="true"></i>`;
 
 export function listFilesHTML(data) {
   let description = "",
