@@ -52,7 +52,7 @@ function getItemIcon(basename) {
     icon = "file";
   }
 
-  return `<i class="fas fa-fw fa-${icon}" aria-hidden="true"></i>`;
+  return `<i class="fas fa-lg fa-fw fa-${icon}" aria-hidden="true"></i>`;
 }
 
 export function listFilesHTML(data) {
@@ -89,7 +89,12 @@ export function listFilesHTML(data) {
       <div class="row"><div class="col col-md-12">
         <table class="table table-hover border bg-white">
           <thead class="thead-light"><tr><th>File</th><th>Size</th><th>Updated</th></tr></thead>
-          <tbody>${tbody}</tbody>
+          <tbody>
+            <tr><td colspan="3">
+              <a href="../"><i class="fas fa-lg fa-fw fa-level-up-alt" aria-hidden="true"></i> Parent directory</a>
+            </td></tr>
+            ${tbody}
+          </tbody>
         </table>
       </div></div>
     </div>`
