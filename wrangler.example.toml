@@ -1,0 +1,7 @@
+name = "github-releases"
+type = "webpack"
+
+account_id = ""
+workers_dev = false
+routes = ["download.example.com/*", "another.example.com/*"]
+zone_id = ""
