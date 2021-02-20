@@ -82,8 +82,10 @@ export function listFilesHTML(data) {
   return makeHTML(
     tag,
     `<div class="container">
-      <h1 class="py-5 text-center">${displayName} - ${SITE_NAME}</h1>
-      ${description}
+      <div class="py-5 text-center">
+        <h1>${displayName} - ${SITE_NAME}</h1>
+        ${description}
+      </div>
       <div class="row"><div class="col col-md-12">
         <table class="table table-hover border bg-white">
           <thead class="thead-light"><tr><th>File</th><th>Size</th><th>Updated</th></tr></thead>
