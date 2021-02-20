@@ -10,6 +10,9 @@ async function fetchEventHandler(event) {
     // Pass through
     return fetch(request);
   }
+  if (url.pathname === "/robots.txt") {
+    return new Response("User-Agent: *\nDisallow: /\n", { status: 200, headers: { "Content-Type": "text/plain" }})
+  }
 
   let newUrl, tag, filename;
   let pathParts = url.pathname.split("/");
@@ -45,6 +48,14 @@ async function fetchEventHandler(event) {
         return createHTMLResponse(503, "Unavailable");
       }
       let data = await response.json();
+      if (request.method === "POST") {
+        // Return the upload URL in JSON
+        response = { upload_url: data["upload_url"].split("{")[0] };
+        return new Response(JSON.stringify(response), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
       return new Response(listFilesHTML(data), { status: 200, headers: { "Content-Type": "text/html" } });
     }
     filename = pathParts[pathParts.length - 1];
