@@ -98,6 +98,9 @@ export function listFilesHTML(data) {
 
 export function listReleasesHTML(data) {
   let tbody = "";
+  data.sort((a, b) =>
+    new Intl.Collator(undefined, { numeric: true, sensitivity: "base" }).compare(a["tag_name"], b["tag_name"])
+  );
   for (let item of data) {
     let tag = item["tag_name"],
       name = item["name"],
