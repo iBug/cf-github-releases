@@ -28,7 +28,13 @@ async function fetchEventHandler(event) {
         return createHTMLResponse(503, "Unavailable");
       }
       let data = await response.json();
-      return new Response(listReleasesHTML(data), { status: 200, headers: { "Content-Type": "text/html" } });
+      let respHeaders = new Headers({ "Content-Type": "text-html" });
+      for (let p of response.headers) {
+        if (p[0].toLowerCase().startsWith("x-ratelimit-")) {
+          respHeaders.set(p[0], p[1]);
+        }
+      }
+      return new Response(listReleasesHTML(data), { status: 200, headers: respHeaders });
     }
 
     // One slash - load file from DEFAULT_TAG
@@ -56,7 +62,13 @@ async function fetchEventHandler(event) {
           headers: { "Content-Type": "application/json" },
         });
       }
-      return new Response(listFilesHTML(data), { status: 200, headers: { "Content-Type": "text/html" } });
+      let respHeaders = new Headers({ "Content-Type": "text-html" });
+      for (let p of response.headers) {
+        if (p[0].toLowerCase().startsWith("x-ratelimit-")) {
+          respHeaders.set(p[0], p[1]);
+        }
+      }
+      return new Response(listFilesHTML(data), { status: 200, headers: respHeaders });
     }
     filename = pathParts[pathParts.length - 1];
   } else {
