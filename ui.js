@@ -1,5 +1,9 @@
 import { SITE_NAME, HEAD, DEFAULT_TAG } from "./config";
 
+function formatDate(timestamp) {
+  return new Date(timestamp).toISOString().replace("T", " ").split(".")[0];
+}
+
 // Credits: https://stackoverflow.com/a/14919494/5958455
 function humanFileSize(bytes, si = false, dp = 1) {
   const thresh = si ? 1000 : 1024;
@@ -73,7 +77,7 @@ export function listFilesHTML(data) {
     let size = item["size"];
     let sizeHuman = humanFileSize(size);
     let sizeActual = size.toLocaleString() + (size === 1 ? " byte" : " bytes");
-    let updated = new Date(item["updated_at"]).toISOString().replace("T", " ").split(".")[0];
+    let updated = formatDate(item["updated_at"]);
     tbody += `<tr>
     <td><a href="/${tag}/${name}">${getItemIcon(name)} ${name}</a></td>
     <td><span title="${sizeActual}">${sizeHuman}</span></td>
@@ -111,7 +115,7 @@ export function listReleasesHTML(data) {
   for (let item of data) {
     let tag = item["tag_name"],
       name = item["name"],
-      publishTime = new Date(item["published_at"]).toUTCString();
+      publishTime = formatDate(item["published_at"]);
     if (tag === DEFAULT_TAG) {
       // The default tag goes in the first place
       let iconHTML = getItemIcon("$folderDefault");
