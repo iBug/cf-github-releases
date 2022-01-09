@@ -81,7 +81,7 @@ export function listFilesHTML(data) {
     tbody += `<tr>
     <td><a href="/${tag}/${name}">${getItemIcon(name)} ${name}</a></td>
     <td><span title="${sizeActual}">${sizeHuman}</span></td>
-    <td>${updated}</td>
+    <td><time>${updated}</time></td>
     </tr>`;
   }
 
@@ -116,22 +116,25 @@ export function listReleasesHTML(data) {
     let tag = item["tag_name"],
       name = item["name"],
       publishTime = formatDate(item["published_at"]);
+
+    let prependItem = false, iconHTML = "";
     if (tag === DEFAULT_TAG) {
       // The default tag goes in the first place
-      let iconHTML = getItemIcon("$folderDefault");
-      tbody =
-        `<tr>
-      <td><a href="/${tag}/">${iconHTML} ${tag}</a></td>
-      <td>${name}</td>
-      <td>${publishTime}</td>
-      </tr>` + tbody;
+      iconHTML = getItemIcon("$folderDefault");
+      prependItem = true;
     } else {
-      let iconHTML = getItemIcon("$folder");
-      tbody += `<tr>
+      iconHTML = getItemIcon("$folder");
+    }
+
+    let newItem = `<tr>
       <td><a href="/${tag}/">${iconHTML} ${tag}</a></td>
       <td>${name}</td>
-      <td>${publishTime}</td>
+      <td><time>${publishTime}</time></td>
       </tr>`;
+    if (prependItem) {
+      tbody = newItem + tbody;
+    } else {
+      tbody += newItem;
     }
   }
 
