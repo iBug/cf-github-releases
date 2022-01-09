@@ -73,7 +73,7 @@ export function listFilesHTML(data) {
     let size = item["size"];
     let sizeHuman = humanFileSize(size);
     let sizeActual = size.toLocaleString() + (size === 1 ? " byte" : " bytes");
-    let updated = new Date(item["updated_at"]).toUTCString();
+    let updated = new Date(item["updated_at"]).toISOString().replace("T", " ").split(".")[0];
     tbody += `<tr>
     <td><a href="/${tag}/${name}">${getItemIcon(name)} ${name}</a></td>
     <td><span title="${sizeActual}">${sizeHuman}</span></td>
@@ -82,23 +82,23 @@ export function listFilesHTML(data) {
   }
 
   return makeHTML(
-    tag,
-    `<div class="container">
+    displayName,
+    `<div class="container-fluid container-md">
       <div class="py-5 text-center">
-        <h1>${displayName} - ${SITE_NAME}</h1>
+        <h1>${displayName}</h1>
         ${description}
       </div>
-      <div class="row"><div class="col col-md-12">
-        <table class="table table-hover border bg-white">
-          <thead class="thead-light"><tr><th>File</th><th>Size</th><th>Updated</th></tr></thead>
-          <tbody>
-            <tr><td colspan="3">
-              <a href="../"><i class="fas fa-lg fa-fw fa-level-up-alt" aria-hidden="true"></i> Parent directory</a>
-            </td></tr>
-            ${tbody}
-          </tbody>
-        </table>
-      </div></div>
+    </div>
+    <div class="container-fluid container-md table-responsive">
+      <table class="table table-hover border bg-white text-nowrap">
+        <thead class="thead-light"><tr><th>File</th><th>Size</th><th>Updated</th></tr></thead>
+        <tbody>
+          <tr><td colspan="3">
+            <a href="../"><i class="fas fa-lg fa-fw fa-level-up-alt" aria-hidden="true"></i> Parent directory</a>
+          </td></tr>
+          ${tbody}
+        </tbody>
+      </table>
     </div>`
   );
 }
@@ -133,14 +133,14 @@ export function listReleasesHTML(data) {
 
   return makeHTML(
     "Home",
-    `<div class="container">
+    `<div class="container-fluid container-md">
       <h1 class="py-5 text-center">${SITE_NAME}</h1>
-      <div class="row"><div class="col col-md-12">
-        <table class="table table-hover border bg-white">
-          <thead class="thead-light"><tr><th>Release</th><th>Name</th><th>Created</th></tr></thead>
-          <tbody>${tbody}</tbody>
-        </table>
-      </div></div>
+    </div>
+    <div class="container-fluid container-md table-responsive">
+      <table class="table table-hover border bg-white text-nowrap">
+        <thead class="thead-light"><tr><th>Release</th><th>Name</th><th>Created</th></tr></thead>
+        <tbody>${tbody}</tbody>
+      </table>
     </div>`
   );
 }
@@ -151,11 +151,12 @@ const makeHTML = (title, body) => `<!DOCTYPE html>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>${title} - ${SITE_NAME}</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha256-T/zFmO5s/0aSwc6ics2KLxlfbewyRz6UNw1s3Ppf5gE=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css" integrity="sha256-0fuNgzfNIlaClbDtmYyFxY8LTNCDrwsNshywr4AALy0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
   ${HEAD}
 </head>
 <body class="bg-light">${body}</body>
+<!-- Powered by iBug/cf-github-releases: https://github.com/iBug/cf-github-releases -->
 </html>`;
 
 export function createHTMLResponse(code, text) {
