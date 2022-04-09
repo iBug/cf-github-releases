@@ -7,8 +7,7 @@ async function fetchEventHandler(event) {
   const request = event.request;
   let url = new URL(request.url);
   if (typeof DOMAIN !== "undefined" && url.hostname !== DOMAIN) {
-    // Pass through
-    return fetch(request);
+    return createHTMLResponse(400, "Bad Request");
   }
   if (url.pathname === "/robots.txt") {
     return new Response("User-Agent: *\nDisallow: /\n", { status: 200, headers: { "Content-Type": "text/plain" }})
@@ -68,18 +67,19 @@ async function fetchEventHandler(event) {
           respHeaders.set(p[0], p[1]);
         }
       }
-      return new Response(listFilesHTML(data), { status: 200, headers: respHeaders });
+      return new Response(listFilesHTML(REPOSITORY, data), { status: 200, headers: respHeaders });
     }
     filename = pathParts[pathParts.length - 1];
   } else {
     return createHTMLResponse(400, "Bad Request");
   }
+
+  // Default action: Download file
   newUrl = `https://github.com/${REPOSITORY}/releases/download/${tag}/${filename}`;
   let response = await fetch(newUrl, { method: request.method });
   if (response.status !== 200) {
     return createHTMLResponse(404, "Not Found");
   }
   let { readable, writable } = new TransformStream();
-  response.body.pipeTo(writable);
-  return new Response(readable, response);
+  return new Response(response.body, response);
 }

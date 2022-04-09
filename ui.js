@@ -52,6 +52,8 @@ function getItemIcon(basename) {
     icon = "file-csv";
   } else if (/\.(sig|asc)$/i.test(basename)) {
     icon = "file-signature";
+  } else if (/\.(exe)$/i.test(basename)) {
+    icon = "window-maximize";
   } else {
     icon = "file";
   }
@@ -61,7 +63,7 @@ function getItemIcon(basename) {
 
 const makeIconHTML = (classes) => `<i class="${classes}" aria-hidden="true"></i>`;
 
-export function listFilesHTML(data) {
+export function listFilesHTML(repository, data) {
   let description = "",
     tbody = "",
     tag = data["tag_name"],
@@ -97,8 +99,10 @@ export function listFilesHTML(data) {
       <table class="table table-hover border bg-white text-nowrap">
         <thead class="thead-light"><tr><th>File</th><th>Size</th><th>Updated</th></tr></thead>
         <tbody>
-          <tr><td colspan="3">
-            <a href="../"><i class="fas fa-lg fa-fw fa-level-up-alt" aria-hidden="true"></i> Parent directory</a>
+          <tr><td colspan="2">
+            <a href="../">${makeIconHTML("fas fa-lg fa-fw fa-level-up-alt")} Parent directory</a>
+          </td><td>
+            <a href="https://github.com/${repository}/releases/edit/${tag}">${makeIconHTML("fas fa-fw fa-edit")} Edit on GitHub</a>
           </td></tr>
           ${tbody}
         </tbody>
