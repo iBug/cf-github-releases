@@ -2,13 +2,12 @@
   "name": "cf-github-releases",
   "version": "1.0.0",
   "description": "Serverless download site from GitHub Releases with Cloudflare Workers",
+  "homepage": "https://github.com/iBug/cf-github-releases",
+  "repository": "github:iBug/cf-github-releases",
   "main": "index.js",
   "author": "iBug <i@ibugone.com>",
   "license": "MIT",
-  "dependencies": {
-    "serverless-cloudflare-workers": "^1.2.0"
-  },
   "devDependencies": {
-    "@cloudflare/wrangler": "^1.19.7"
+    "@cloudflare/wrangler": "^1.19.12"
   }
 }
