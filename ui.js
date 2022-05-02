@@ -102,7 +102,7 @@ export function listFilesHTML(repository, data) {
           <tr><td colspan="2">
             <a href="../">${makeIconHTML("fas fa-lg fa-fw fa-level-up-alt")} Parent directory</a>
           </td><td>
-            <a href="https://github.com/${repository}/releases/edit/${tag}">${makeIconHTML("fas fa-fw fa-edit")} Edit on GitHub</a>
+            <a href="https://github.com/${repository}/releases/edit/${tag}" style="opacity: 0;">${makeIconHTML("fas fa-fw fa-edit")} Edit on GitHub</a>
           </td></tr>
           ${tbody}
         </tbody>
