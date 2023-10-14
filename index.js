@@ -1,10 +1,7 @@
 import { DOMAIN, REPOSITORY, DEFAULT_TAG, SITE_NAME } from "./config";
 import { listFilesHTML, listReleasesHTML, createHTMLResponse } from "./ui";
 
-addEventListener("fetch", (event) => event.respondWith(fetchEventHandler(event)));
-
-async function fetchEventHandler(event) {
-  const request = event.request;
+async function handleFetch(request) {
   let url = new URL(request.url);
   if (typeof DOMAIN !== "undefined" && url.hostname !== DOMAIN) {
     return createHTMLResponse(400, "Bad Request");
@@ -83,3 +80,7 @@ async function fetchEventHandler(event) {
   let { readable, writable } = new TransformStream();
   return new Response(response.body, response);
 }
+
+export default {
+  fetch: handleFetch,
+};

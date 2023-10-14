@@ -18,11 +18,11 @@ Preview:
 
 ### Install Wrangler
 
-See [Cloudflare's documentation](https://developers.cloudflare.com/workers/cli-wrangler/install-update) for more information.
+See [Cloudflare's documentation](https://developers.cloudflare.com/workers/wrangler/install-and-update/) for more information.
 
 ### `wrangler.toml`
 
-Copy `wrangler.example.toml` to `wrangler.toml` and fill in your own information into the variables. Refer to [Cloudflare's documentation](https://developers.cloudflare.com/workers/cli-wrangler/configuration) for more information.
+Copy `wrangler.example.toml` to `wrangler.toml` and fill in your own information into the variables. Refer to [Cloudflare's documentation](https://developers.cloudflare.com/workers/wrangler/configuration/) for more information.
 
 ### `config.js`
 

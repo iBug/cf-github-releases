@@ -7,7 +7,10 @@
   "main": "index.js",
   "author": "iBug <i@ibugone.com>",
   "license": "MIT",
-  "devDependencies": {
-    "@cloudflare/wrangler": "^1.19.12"
+  "scripts": {
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "wrangler": "^3.13.1"
   }
 }
