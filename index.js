@@ -24,7 +24,7 @@ async function handleFetch(request) {
         return createHTMLResponse(503, "Unavailable");
       }
       let data = await response.json();
-      let respHeaders = new Headers({ "Content-Type": "text-html" });
+      let respHeaders = new Headers({ "Content-Type": "text/html" });
       for (let p of response.headers) {
         if (p[0].toLowerCase().startsWith("x-ratelimit-")) {
           respHeaders.set(p[0], p[1]);
@@ -58,7 +58,7 @@ async function handleFetch(request) {
           headers: { "Content-Type": "application/json" },
         });
       }
-      let respHeaders = new Headers({ "Content-Type": "text-html" });
+      let respHeaders = new Headers({ "Content-Type": "text/html" });
       for (let p of response.headers) {
         if (p[0].toLowerCase().startsWith("x-ratelimit-")) {
           respHeaders.set(p[0], p[1]);
