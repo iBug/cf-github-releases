@@ -74,16 +74,22 @@ export function listFilesHTML(repository, data) {
     description = `<p class="lead">${data["body"]}</p>`;
   }
 
-  for (let item of data["assets"]) {
+  let assets = data["assets"];
+  const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
+  assets.sort((a, b) => collator.compare(a["name"], b["name"]));
+
+  for (let item of assets) {
     let name = item["name"];
     let size = item["size"];
     let sizeHuman = humanFileSize(size);
     let sizeActual = size.toLocaleString() + (size === 1 ? " byte" : " bytes");
     let updated = formatDate(item["updated_at"]);
+    let download_count = item["download_count"];
     tbody += `<tr>
     <td><a href="/${tag}/${name}">${getItemIcon(name)} ${name}</a></td>
     <td><span title="${sizeActual}">${sizeHuman}</span></td>
     <td><time>${updated}</time></td>
+    <td><time>${download_count}</time></td>
     </tr>`;
   }
 
@@ -97,13 +103,13 @@ export function listFilesHTML(repository, data) {
     </div>
     <div class="container-fluid container-md table-responsive">
       <table class="table table-hover border bg-white text-nowrap">
-        <thead class="thead-light"><tr><th>File</th><th>Size</th><th>Updated</th></tr></thead>
+        <thead class="thead-light"><tr><th>File</th><th>Size</th><th>Updated</th><th>Downloaded</th></tr></thead>
         <tbody>
           <tr><td colspan="2">
             <a href="../">${makeIconHTML("fas fa-lg fa-fw fa-level-up-alt")} Parent directory</a>
           </td><td>
             <a href="https://github.com/${repository}/releases/edit/${tag}" style="opacity: 0;">${makeIconHTML("fas fa-fw fa-edit")} Edit on GitHub</a>
-          </td></tr>
+          </td><td></td></tr>
           ${tbody}
         </tbody>
       </table>
